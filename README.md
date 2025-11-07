@@ -11,13 +11,16 @@ npm install
 ## Használat
 
 ```bash
-npm start <YouTube URL>
+npm start "<YouTube URL>"
 ```
+
+**Fontos:** Az URL-t tedd idézőjelek közé, különösen ha `&` vagy más speciális karaktereket tartalmaz!
 
 ### Példa
 
 ```bash
-npm start https://www.youtube.com/watch?v=dQw4w9WgXcQ
+npm start "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+npm start "https://www.youtube.com/watch?v=VtHvkBWToJs&t=339s"
 ```
 
 ### Demo mód
@@ -78,5 +81,5 @@ Bélyegkép: https://i.ytimg.com/vi/jNQXAC9IVRw/maxresdefault.jpg
 ## Technológia
 
 - Node.js
-- ytdl-core - YouTube videó információk lekérése
+- @distube/ytdl-core - YouTube videó információk lekérése (aktívan karbantartott fork)
 - chalk - Színes konzol kimenet
