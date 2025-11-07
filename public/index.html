@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Videó Információ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📺 YouTube Videó Információ</h1>
+            <p>Add meg a YouTube videó URL-jét az adatok megtekintéséhez</p>
+        </header>
+
+        <div class="search-section">
+            <form id="videoForm">
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="urlInput"
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        required
+                    >
+                    <button type="submit" id="searchBtn">
+                        <span class="btn-text">Keresés</span>
+                        <span class="loader" style="display: none;"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="results" class="results" style="display: none;">
+            <div class="video-header">
+                <img id="thumbnail" src="" alt="Videó bélyegkép" class="thumbnail">
+                <div class="video-title-section">
+                    <h2 id="title"></h2>
+                    <div class="channel-info">
+                        <p id="author"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👁️</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Megtekintések</div>
+                        <div class="stat-value" id="views"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👍</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Értékelések</div>
+                        <div class="stat-value" id="likes"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Hossz</div>
+                        <div class="stat-value" id="duration"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Feltöltve</div>
+                        <div class="stat-value" id="uploadDate"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>📝 Leírás</h3>
+                <p id="description" class="description"></p>
+            </div>
+
+            <div class="info-section">
+                <h3>ℹ️ További információk</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Videó ID:</span>
+                        <span id="videoId"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Kategória:</span>
+                        <span id="category"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Csatorna:</span>
+                        <span id="channel"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section" id="keywordsSection" style="display: none;">
+                <h3>🏷️ Címkék</h3>
+                <div id="keywords" class="tags"></div>
+            </div>
+
+            <div class="info-section">
+                <h3>🔗 Linkek</h3>
+                <div class="links">
+                    <a id="videoLink" href="" target="_blank" class="link-btn">
+                        Megnyitás YouTube-on
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>YouTube Videó Információ Alkalmazás | Node.js + Express</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

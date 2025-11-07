@@ -1,6 +1,6 @@
 # YouTube Videó Információ Megjelenítő
 
-Egyszerű Node.js alkalmazás, amely YouTube videók adatait jeleníti meg.
+Teljes körű Node.js alkalmazás YouTube videók adatainak megjelenítéséhez - **Web alkalmazás** és **CLI** (parancssoros) verzióval.
 
 ## Telepítés
 
@@ -10,22 +10,47 @@ npm install
 
 ## Használat
 
+### 🌐 Web Alkalmazás (Ajánlott)
+
+Modern böngészős felület YouTube videók információinak megtekintéséhez.
+
+**Indítás:**
 ```bash
-npm start "<YouTube URL>"
+npm start
+```
+
+Majd nyisd meg a böngészőben: **http://localhost:3000**
+
+**Funkciók:**
+- Egyszerű, modern felület
+- Valós idejű videó információ lekérés
+- Bélyegkép megjelenítés
+- Statisztikák (megtekintések, értékelések, stb.)
+- Reszponzív design (mobil és asztal)
+
+---
+
+### 💻 CLI Verzió (Parancssoros)
+
+Terminálból használható verzió színes kimenettel.
+
+```bash
+npm run cli "<YouTube URL>"
 ```
 
 **Fontos:** Az URL-t tedd idézőjelek közé, különösen ha `&` vagy más speciális karaktereket tartalmaz!
 
-### Példa
-
+**Példa:**
 ```bash
-npm start "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-npm start "https://www.youtube.com/watch?v=VtHvkBWToJs&t=339s"
+npm run cli "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+npm run cli "https://www.youtube.com/watch?v=VtHvkBWToJs&t=339s"
 ```
 
-### Demo mód
+---
 
-Ha nincs internet kapcsolat vagy szeretnéd megnézni hogyan néz ki az alkalmazás kimenete:
+### 🎮 Demo Mód
+
+Ha nincs internet kapcsolat vagy szeretnéd megnézni hogyan néz ki a CLI kimenet:
 
 ```bash
 npm run demo
@@ -44,42 +69,110 @@ Az alkalmazás a következő videó adatokat jeleníti meg:
 - 📅 Feltöltés dátuma
 - 📂 Kategória
 - 👍 Értékelések száma
-- 📝 Leírás (rövidítve)
+- 📝 Leírás
 - 🏷️ Címkék/kulcsszavak
 - 🔗 URL
-- 🖼️ Bélyegkép URL
+- 🖼️ Bélyegkép
 
-## Példa kimenet
+## Képernyőképek
 
+### Web Alkalmazás
+A web alkalmazás modern, színes felülettel rendelkezik:
+- **Keresőmező** a YouTube URL beillesztéséhez
+- **Videó bélyegkép** és cím megjelenítése
+- **Statisztikai kártyák** vizuális megjelenítéssel
+- **Teljes leírás** és címkék
+- **Közvetlen link** a YouTube-ra
+
+### CLI Verzió
+A CLI verzió színes terminál kimenettel rendelkezik.
+
+## API Endpoints
+
+Ha saját klienst szeretnél készíteni:
+
+### POST /api/video-info
+Videó információk lekérése YouTube URL alapján.
+
+**Request:**
+```json
+{
+  "url": "https://www.youtube.com/watch?v=..."
+}
 ```
-🔍 Videó információk lekérése...
 
-📺 Videó Adatok:
-
-Cím: Me at the zoo
-Feltöltő: jawed
-Csatorna: jawed
-Videó ID: jNQXAC9IVRw
-Hossz: 0:19
-Megtekintések: 279 000 000
-Feltöltés dátuma: 2005-04-24
-Kategória: People & Blogs
-Értékelések: 13 000 000
-
-Leírás:
-The first video on YouTube. Maybe it's time to go back to the zoo?
-
-Címkék:
-zoo, elephant, me, first video, youtube history
-
-URL: https://www.youtube.com/watch?v=jNQXAC9IVRw
-Bélyegkép: https://i.ytimg.com/vi/jNQXAC9IVRw/maxresdefault.jpg
-
-✅ Sikeres lekérés!
+**Response:**
+```json
+{
+  "title": "Videó címe",
+  "author": "Csatorna neve",
+  "viewCount": 123456,
+  "likes": 5000,
+  "duration": "10:30",
+  "description": "...",
+  ...
+}
 ```
 
 ## Technológia
 
+### Backend
 - Node.js
+- Express.js - Web szerver
 - @distube/ytdl-core - YouTube videó információk lekérése (aktívan karbantartott fork)
+
+### Frontend
+- Vanilla JavaScript (ES6+)
+- Modern CSS3 (Grid, Flexbox, gradients)
+- Responsive design
+- Fetch API
+
+### CLI
 - chalk - Színes konzol kimenet
+
+## Projekt Struktúra
+
+```
+claude_code_test/
+├── server.js           # Express szerver (web alkalmazás)
+├── index.js            # CLI alkalmazás
+├── demo.js             # Demo mód
+├── package.json        # Projekt konfiguráció
+├── public/             # Statikus web fájlok
+│   ├── index.html      # Főoldal
+│   ├── style.css       # Stílusok
+│   └── app.js          # Client-side JavaScript
+└── README.md           # Dokumentáció
+```
+
+## Parancsok Összefoglalója
+
+| Parancs | Leírás |
+|---------|--------|
+| `npm start` | Web alkalmazás indítása (http://localhost:3000) |
+| `npm run cli "<url>"` | CLI verzió futtatása YouTube URL-lel |
+| `npm run demo` | Demo mód (példa kimenet) |
+| `npm run dev` | Fejlesztői mód (ugyanaz mint `npm start`) |
+
+## Hibaelhárítás
+
+**"Could not extract functions" hiba:**
+- Az alkalmazás a legfrissebb @distube/ytdl-core könyvtárat használja
+- Ha továbbra is hibát kapsz, ellenőrizd az internet kapcsolatot
+- Lehet, hogy a YouTube átmenetileg blokkol automatizált kéréseket
+
+**Port már használatban:**
+- Az alkalmazás alapértelmezetten a 3000-es porton fut
+- Állítsd be a `PORT` környezeti változót más port használatához:
+  ```bash
+  PORT=8080 npm start
+  ```
+
+**URL nem működik CLI-ben:**
+- Használj idézőjeleket az URL körül
+- Helyes: `npm run cli "https://..."`
+- Helytelen: `npm run cli https://...`
+
+## Licenc
+
+MIT
