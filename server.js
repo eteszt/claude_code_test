@@ -52,13 +52,26 @@ app.post('/api/video-info', async (req, res) => {
     res.json(response);
 
   } catch (error) {
-    console.error('Hiba:', error);
+    console.error('Hiba videó információk lekérésekor:', error.message);
+    console.error('Stack:', error.stack);
 
     if (error.message.includes('Video unavailable')) {
       return res.status(404).json({ error: 'A videó nem elérhető vagy privát' });
     }
 
-    res.status(500).json({ error: 'Hiba történt a videó információk lekérése során' });
+    if (error.message.includes('Could not extract')) {
+      return res.status(503).json({
+        error: 'YouTube API hiba - Próbáld újra később',
+        details: 'A YouTube API átmenetileg nem elérhető vagy változott'
+      });
+    }
+
+    // Részletesebb hibaüzenet development módban
+    const isDev = process.env.NODE_ENV !== 'production';
+    res.status(500).json({
+      error: 'Hiba történt a videó információk lekérése során',
+      details: isDev ? error.message : undefined
+    });
   }
 });
 

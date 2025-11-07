@@ -1,9 +1,13 @@
 {
   "version": 2,
+  "env": {
+    "YTDL_NO_UPDATE": "1",
+    "NODE_ENV": "production"
+  },
   "functions": {
     "api/index.js": {
       "memory": 1024,
-      "maxDuration": 10
+      "maxDuration": 30
     }
   },
   "rewrites": [
