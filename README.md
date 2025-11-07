@@ -8,10 +8,20 @@ Teljes körű Node.js alkalmazás YouTube videók adatainak megjelenítéséhez 
 
 Részletes útmutató különböző platformokhoz: [DEPLOYMENT.md](DEPLOYMENT.md)
 
-**Gyors start (Vercel - ajánlott):**
-1. Regisztráció: https://vercel.com
-2. GitHub repo importálás
-3. Deploy gomb → Kész! 🎉
+**⚠️ Fontos:** A Vercel serverless environment **nem ajánlott** YouTube bot-védelem miatt!
+
+**Gyors start (Railway - AJÁNLOTT):**
+1. Regisztráció: https://railway.app (GitHub fiókkal)
+2. "New Project" → "Deploy from GitHub repo"
+3. Válaszd ki: `eteszt/claude_code_test`
+4. Branch: `claude/youtube-app-build-011CUuDnRVD5ToPMbJNNuPFX`
+5. Deploy → Kész! 🎉 (2-3 perc)
+
+**Miért Railway?**
+- ✅ Hagyományos szerver (nem serverless) → YouTube nem blokkolja
+- ✅ Ingyenes 500 óra/hó
+- ✅ Automatikus deployment git push után
+- ✅ Megbízható működés
 
 ---
 

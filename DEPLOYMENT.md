@@ -4,13 +4,56 @@ Ez az útmutató segít az alkalmazást az interneten elérhetővé tenni külö
 
 ## 🚀 Deployment Opciók
 
-### 1. Vercel (Ajánlott - Legegyszerűbb)
+### 1. Railway (AJÁNLOTT - Megbízható)
 
 **Előnyök:**
+- ✅ Ingyenes tier (500 óra/hó)
+- ✅ Hagyományos szerver (nem serverless) → **YouTube nem blokkolja bot-védelemmel**
+- ✅ Egyszerű használat
+- ✅ Git integráció
+- ✅ Automatikus HTTPS
+
+**Lépések:**
+
+1. **Regisztráció:** https://railway.app/ (GitHub fiókkal)
+2. **Új projekt:**
+   - Kattints: "New Project"
+   - Válaszd: "Deploy from GitHub repo"
+   - Válaszd ki: `eteszt/claude_code_test`
+3. **Beállítások:**
+   - Branch: `claude/youtube-app-build-011CUuDnRVD5ToPMbJNNuPFX`
+   - Start Command: `npm start` (automatikusan felismeri)
+4. **Deploy és kész!**
+   - Várj 2-3 percet
+   - A dashboard-on megjelenik a publikus URL
+
+**URL:** Megjelenik a Railway dashboardon (pl. `your-app.up.railway.app`)
+
+**Automatikus frissítés:**
+Minden git push után automatikusan újra-deployol.
+
+---
+
+### 2. Vercel (NEM AJÁNLOTT - YouTube bot-védelem miatt)
+
+**⚠️ Figyelem:** A Vercel serverless function-ökkel nem működik megbízhatóan!
+
+**Probléma:**
+A YouTube bot-védelmével blokkol serverless kéréseket:
+```
+Error: Sign in to confirm you're not a bot
+```
+
+**Előnyök (ha működne):**
 - ✅ Ingyenes
 - ✅ Automatikus HTTPS
 - ✅ Git integráció
 - ✅ Nagyon gyors deployment
+
+**Hátrányok:**
+- ❌ YouTube bot-védelem blokkol
+- ❌ Serverless timeout limit (30 mp max)
+- ❌ Nem megbízható ytdl-core használathoz
 
 **Lépések:**
 
@@ -26,29 +69,6 @@ Ez az útmutató segít az alkalmazást az interneten elérhetővé tenni külö
 
 **Automatikus frissítés:**
 Minden git push után automatikusan újra-deployol.
-
----
-
-### 2. Railway
-
-**Előnyök:**
-- ✅ Ingyenes tier (500 óra/hó)
-- ✅ Egyszerű használat
-- ✅ Git integráció
-
-**Lépések:**
-
-1. **Regisztráció:** https://railway.app/
-2. **Új projekt:**
-   - Kattints: "New Project"
-   - Válaszd: "Deploy from GitHub repo"
-   - Válaszd ki: `eteszt/claude_code_test`
-3. **Beállítások:**
-   - Branch: `claude/youtube-app-build-011CUuDnRVD5ToPMbJNNuPFX`
-   - Start Command: `npm start`
-4. **Deploy és kész!**
-
-URL: Megjelenik a Railway dashboardon
 
 ---
 
@@ -140,22 +160,22 @@ Bármelyik platformot is választod:
 
 ## 🎯 Melyiket válaszd?
 
-| Platform | Ingyenes | Egyszerűség | Sebesség | Ajánlás |
-|----------|----------|-------------|----------|---------|
-| **Vercel** | ✅ | ⭐⭐⭐⭐⭐ | ⚡⚡⚡ | **Legjobb választás** |
-| **Railway** | ✅ (limit) | ⭐⭐⭐⭐ | ⚡⚡ | Jó alternatíva |
-| **Render** | ✅ | ⭐⭐⭐ | ⚡ | Stabil, megbízható |
-| **Ngrok** | ✅ | ⭐⭐⭐⭐⭐ | ⚡⚡⚡ | Csak tesztelésre! |
-| **Heroku** | ❌ | ⭐⭐⭐ | ⚡⚡ | Csak ha már fizetsz érte |
+| Platform | Ingyenes | Egyszerűség | YouTube bot-védelem | Ajánlás |
+|----------|----------|-------------|---------------------|---------|
+| **Railway** | ✅ (500h/hó) | ⭐⭐⭐⭐ | ✅ **Működik!** | **🏆 LEGJOBB** |
+| **Render** | ✅ | ⭐⭐⭐ | ✅ Működik | Jó alternatíva |
+| **Vercel** | ✅ | ⭐⭐⭐⭐⭐ | ❌ Blokkol | ⚠️ NEM ajánlott |
+| **Ngrok** | ✅ | ⭐⭐⭐⭐⭐ | ✅ Működik | Csak tesztelésre! |
+| **Heroku** | ❌ | ⭐⭐⭐ | ✅ Működik | Csak ha már fizetsz |
 
-**Ajánlás: Kezdd a Vercel-lel!** Legegyszerűbb és teljesen ingyenes.
+**⭐ Ajánlás: Railway!** Megbízható, ingyenes, és a YouTube nem blokkolja.
 
 ---
 
 ## ❓ Gyakori kérdések
 
 **Q: Mennyibe kerül?**
-A: Vercel, Railway és Render mind kínál ingyenes tier-t, ami bőven elég ehhez az alkalmazáshoz.
+A: Railway és Render mind kínál ingyenes tier-t, ami bőven elég ehhez az alkalmazáshoz. Railway: 500 óra/hó (kb. 20 nap folyamatos futás).
 
 **Q: HTTPS-t kapok?**
 A: Igen, mindegyik platform automatikusan ad HTTPS-t.
@@ -167,7 +187,7 @@ A: Igen, mindegyik platform támogatja (lehet fizetős opcióban).
 A: Csak push-old a változtatásokat GitHub-ra, és automatikusan újra-deployol.
 
 **Q: Mennyi ideig tart a deployment?**
-A: Vercel: ~1-2 perc, Railway: ~2-3 perc, Render: ~5-10 perc
+A: Railway: ~2-3 perc, Render: ~5-10 perc, Vercel: ~1-2 perc (de nem működik YouTube-hoz)
 
 ---
 
