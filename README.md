@@ -2,7 +2,20 @@
 
 Teljes körű Node.js alkalmazás YouTube videók adatainak megjelenítéséhez - **Web alkalmazás** és **CLI** (parancssoros) verzióval.
 
-## Telepítés
+## 🚀 Online Használat (Webről elérhető)
+
+**Az alkalmazást az interneten is használhatod deployment után!**
+
+Részletes útmutató különböző platformokhoz: [DEPLOYMENT.md](DEPLOYMENT.md)
+
+**Gyors start (Vercel - ajánlott):**
+1. Regisztráció: https://vercel.com
+2. GitHub repo importálás
+3. Deploy gomb → Kész! 🎉
+
+---
+
+## Telepítés (Lokális használathoz)
 
 ```bash
 npm install
