@@ -76,9 +76,14 @@ function formatDuration(seconds) {
   return `${minutes}:${secs.toString().padStart(2, '0')}`;
 }
 
-// Szerver indítása
-app.listen(PORT, () => {
-  console.log(`\n🚀 YouTube videó információ alkalmazás fut:`);
-  console.log(`📡 http://localhost:${PORT}`);
-  console.log(`\n➡️  Nyisd meg a böngészőben: http://localhost:${PORT}\n`);
-});
+// Szerver indítása (csak ha nem Vercel környezetben fut)
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 YouTube videó információ alkalmazás fut:`);
+    console.log(`📡 http://localhost:${PORT}`);
+    console.log(`\n➡️  Nyisd meg a böngészőben: http://localhost:${PORT}\n`);
+  });
+}
+
+// Export az Express app-ot Vercel serverless function számára
+export default app;
