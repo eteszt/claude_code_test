@@ -27,11 +27,12 @@ app.post('/api/search', async (req, res) => {
 
     console.log(`Keresés: "${query}"`);
 
-    // Keresés YouTube-on (10 találat)
+    // Keresés YouTube-on (10 találat, feltöltési idő szerint rendezve)
     const results = await YouTube.search(query, {
       limit: 10,
       type: 'video',
-      safeSearch: false
+      safeSearch: false,
+      sort: 'uploadDate' // Legfrissebb videók elöl
     });
 
     // Eredmények formázása
