@@ -19,13 +19,13 @@ app.use(express.json());
 // API endpoint a YouTube kereséshez
 app.post('/api/search', async (req, res) => {
   try {
-    const { query } = req.body;
+    const { query, sortBy = 'newest' } = req.body;
 
     if (!query) {
       return res.status(400).json({ error: 'Keresési kifejezés megadása kötelező' });
     }
 
-    console.log(`Keresés: "${query}"`);
+    console.log(`Keresés: "${query}", Rendezés: ${sortBy}`);
 
     // Keresés YouTube-on (30 találat, hogy legyen mit rendezni)
     const results = await YouTube.search(query, {
@@ -70,8 +70,16 @@ app.post('/api/search', async (req, res) => {
       };
     });
 
-    // Rendezés feltöltési idő szerint (legfrissebb elöl)
-    videos.sort((a, b) => a._daysAgo - b._daysAgo);
+    // Rendezés a választott mód szerint
+    if (sortBy === 'newest') {
+      // Feltöltési idő szerint (legfrissebb elöl)
+      videos.sort((a, b) => a._daysAgo - b._daysAgo);
+      console.log('Rendezve: feltöltési idő szerint (legfrissebb elöl)');
+    } else if (sortBy === 'popular') {
+      // Nézettség szerint (legnépszerűbb elöl)
+      videos.sort((a, b) => b.viewCount - a.viewCount);
+      console.log('Rendezve: nézettség szerint (legnépszerűbb elöl)');
+    }
 
     // Első 10 videó kiválasztása
     const top10Videos = videos.slice(0, 10).map(v => {
@@ -79,7 +87,7 @@ app.post('/api/search', async (req, res) => {
       return video;
     });
 
-    console.log(`${top10Videos.length} találat feltöltési idő szerint rendezve (legfrissebb elöl)`);
+    console.log(`${top10Videos.length} találat`);
 
     res.json({ results: top10Videos });
 

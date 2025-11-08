@@ -1,5 +1,6 @@
 const searchForm = document.getElementById('searchForm');
 const searchInput = document.getElementById('searchInput');
+const sortSelect = document.getElementById('sortSelect');
 const searchBtn = document.getElementById('searchBtn');
 const errorDiv = document.getElementById('error');
 const searchResultsDiv = document.getElementById('searchResults');
@@ -15,6 +16,7 @@ searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const query = searchInput.value.trim();
+    const sortBy = sortSelect.value;
     if (!query) return;
 
     setLoading(true);
@@ -28,7 +30,7 @@ searchForm.addEventListener('submit', async (e) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ query })
+            body: JSON.stringify({ query, sortBy })
         });
 
         const data = await response.json();

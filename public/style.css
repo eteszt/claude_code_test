@@ -62,6 +62,26 @@ header p {
     border-color: #667eea;
 }
 
+.sort-select {
+    padding: 15px 20px;
+    font-size: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    outline: none;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    min-width: 180px;
+}
+
+.sort-select:focus {
+    border-color: #667eea;
+}
+
+.sort-select:hover {
+    border-color: #764ba2;
+}
+
 #searchBtn {
     padding: 15px 40px;
     font-size: 1rem;
@@ -393,6 +413,10 @@ footer {
 
     .input-group {
         flex-direction: column;
+    }
+
+    .sort-select {
+        width: 100%;
     }
 
     #searchBtn {
