@@ -84,36 +84,37 @@ app.post('/api/search', async (req, res) => {
     // Első 10 videó kiválasztása
     const top10 = videos.slice(0, 10);
 
-    // Részletes videó információk lekérése párhuzamosan (leírásokkal együtt)
-    console.log('Részletes leírások lekérése a top 10 videóhoz...');
+    // Részletes videó információk lekérése sorban (rate limit elkerülése)
+    console.log('Részletes leírások lekérése a top 10 videóhoz (késleltetéssel)...');
 
-    const detailedVideos = await Promise.allSettled(
-      top10.map(async (video) => {
-        try {
-          const fullVideo = await YouTube.getVideo(video.url);
+    const top10Videos = [];
 
-          return {
-            ...video,
-            description: fullVideo?.description || ''
-          };
-        } catch (err) {
-          console.log(`Nem sikerült lekérni leírást: ${video.title?.substring(0, 40)}... - ${err.message}`);
-          return { ...video, description: '' };
+    for (let i = 0; i < top10.length; i++) {
+      const video = top10[i];
+      const { _daysAgo, ...videoData } = video;
+
+      try {
+        // Késleltetés a rate limit elkerülése érdekében (300ms minden kérés után, kivéve az elsőt)
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 300));
         }
-      })
-    );
 
-    // Csak a sikeresen lekért videókat tartjuk meg
-    const top10Videos = detailedVideos.map((result, index) => {
-      if (result.status === 'fulfilled') {
-        const { _daysAgo, ...video } = result.value;
-        return video;
-      } else {
-        // Ha hibázott, az eredeti adatokat használjuk leírás nélkül
-        const { _daysAgo, ...video } = top10[index];
-        return { ...video, description: '' };
+        const fullVideo = await YouTube.getVideo(video.url);
+
+        top10Videos.push({
+          ...videoData,
+          description: fullVideo?.description || ''
+        });
+
+        console.log(`✓ ${i + 1}/10 - Leírás OK: ${video.title?.substring(0, 40)}...`);
+      } catch (err) {
+        console.log(`✗ ${i + 1}/10 - Nem sikerült: ${video.title?.substring(0, 40)}... - ${err.message}`);
+        top10Videos.push({
+          ...videoData,
+          description: ''
+        });
       }
-    });
+    }
 
     console.log(`${top10Videos.length} találat`);
     const firstDesc = top10Videos[0]?.description;
