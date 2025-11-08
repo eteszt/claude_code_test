@@ -107,7 +107,7 @@ function displaySearchResults(results) {
     results.forEach((video, index) => {
         const card = document.createElement('div');
         card.className = 'video-card';
-        card.onclick = () => showVideoDetails(video.url);
+        card.onclick = () => window.open(video.url, '_blank');
 
         card.innerHTML = `
             <img src="${video.thumbnail}" alt="${video.title}" class="video-card-thumbnail">
