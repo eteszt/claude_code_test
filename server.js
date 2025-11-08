@@ -27,15 +27,15 @@ app.post('/api/search', async (req, res) => {
 
     console.log(`Keresés: "${query}"`);
 
-    // Keresés YouTube-on (több eredmény lekérése rendezéshez)
+    // Keresés YouTube-on (10 találat)
     const results = await YouTube.search(query, {
-      limit: 30, // Több eredményt kérünk le
+      limit: 10,
       type: 'video',
       safeSearch: false
     });
 
-    // Eredmények formázása feltöltési időponttal
-    let videos = results.map(video => ({
+    // Eredmények formázása
+    const videos = results.map(video => ({
       videoId: video.id,
       title: video.title,
       author: video.channel?.name || 'N/A',
@@ -43,26 +43,11 @@ app.post('/api/search', async (req, res) => {
       duration: video.durationFormatted || 'N/A',
       viewCount: video.views || 0,
       uploadedAt: video.uploadedAt || 'N/A',
-      uploadDate: video.uploadDate || video.uploaded || null, // Feltöltési dátum
       thumbnail: video.thumbnail?.url || '',
       url: video.url
     }));
 
-    // Rendezés feltöltési idő szerint (legfrissebbtől a legrégebbiig)
-    videos.sort((a, b) => {
-      if (a.uploadDate && b.uploadDate) {
-        // Ha Date objektumok, időbélyeg alapján rendezünk
-        const dateA = a.uploadDate instanceof Date ? a.uploadDate.getTime() : new Date(a.uploadDate).getTime();
-        const dateB = b.uploadDate instanceof Date ? b.uploadDate.getTime() : new Date(b.uploadDate).getTime();
-        return dateB - dateA; // Csökkenő sorrend (legfrissebb elöl)
-      }
-      return 0;
-    });
-
-    // Csak a legfrissebb 10 videót adjuk vissza
-    videos = videos.slice(0, 10).map(({ uploadDate, ...video }) => video); // uploadDate eltávolítása
-
-    console.log(`${videos.length} találat (legfrissebb 10, időrendben)`);
+    console.log(`${videos.length} találat (YouTube relevancia szerint)`);
 
     res.json({ results: videos });
 
