@@ -1,6 +1,6 @@
-# YouTube Videó Információ Megjelenítő
+# YouTube Videó Keresés és Információ Megjelenítő
 
-Teljes körű Node.js alkalmazás YouTube videók adatainak megjelenítéséhez - **Web alkalmazás** és **CLI** (parancssoros) verzióval.
+Teljes körű Node.js alkalmazás YouTube videók kereséséhez és adatainak megjelenítéséhez - **Web alkalmazás** keresési funkcióval és **CLI** (parancssoros) verzióval.
 
 ## 🚀 Online Használat (Webről elérhető)
 
@@ -35,7 +35,7 @@ npm install
 
 ### 🌐 Web Alkalmazás (Ajánlott)
 
-Modern böngészős felület YouTube videók információinak megtekintéséhez.
+Modern böngészős felület YouTube videók kereséséhez és információinak megtekintéséhez.
 
 **Indítás:**
 ```bash
@@ -45,11 +45,20 @@ npm start
 Majd nyisd meg a böngészőben: **http://localhost:3000**
 
 **Funkciók:**
-- Egyszerű, modern felület
-- Valós idejű videó információ lekérés
-- Bélyegkép megjelenítés
-- Statisztikák (megtekintések, értékelések, stb.)
-- Reszponzív design (mobil és asztal)
+- 🔍 **YouTube keresés magyar nyelvű kifejezésekkel**
+- 📹 **10 legújabb videó megjelenítése** keresési eredményekben
+- 🖼️ Bélyegképek, címek, csatornák listázása
+- 👆 Kattintható videó kártyák részletes információkért
+- 📊 Statisztikák (megtekintések, értékelések, hossz, feltöltés dátuma)
+- 📝 Teljes videó leírás, címkék, kategória
+- ↩️ Vissza gomb az eredményekhez
+- 📱 Reszponzív design (mobil és asztal)
+
+**Használat:**
+1. Írj be egy keresési kifejezést (pl. "kutyák vicces videók")
+2. Kattints a Keresés gombra
+3. Böngészd a 10 találatot
+4. Kattints egy videóra a részletekért
 
 ---
 
