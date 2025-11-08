@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Videó Információ</title>
+    <title>YouTube Videó Keresés</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📺 YouTube Videó Információ</h1>
-            <p>Add meg a YouTube videó URL-jét az adatok megtekintéséhez</p>
+            <h1>🔍 YouTube Videó Keresés</h1>
+            <p>Írj be keresési kifejezéseket magyarul és találd meg a legújabb videókat</p>
         </header>
 
         <div class="search-section">
-            <form id="videoForm">
+            <form id="searchForm">
                 <div class="input-group">
                     <input
                         type="text"
-                        id="urlInput"
-                        placeholder="https://www.youtube.com/watch?v=..."
+                        id="searchInput"
+                        placeholder="pl. kutyák vicces videók, főzés recept, zene..."
                         required
                     >
                     <button type="submit" id="searchBtn">
@@ -32,7 +32,16 @@
 
         <div id="error" class="error" style="display: none;"></div>
 
-        <div id="results" class="results" style="display: none;">
+        <!-- Keresési eredmények listája -->
+        <div id="searchResults" class="search-results" style="display: none;">
+            <h2>📹 Keresési Eredmények (<span id="resultCount">0</span>)</h2>
+            <div id="videoList" class="video-list"></div>
+        </div>
+
+        <!-- Részletes videó információk -->
+        <div id="videoDetails" class="results" style="display: none;">
+            <button id="backBtn" class="back-btn">← Vissza az eredményekhez</button>
+
             <div class="video-header">
                 <img id="thumbnail" src="" alt="Videó bélyegkép" class="thumbnail">
                 <div class="video-title-section">
@@ -114,7 +123,7 @@
     </div>
 
     <footer>
-        <p>YouTube Videó Információ Alkalmazás | Node.js + Express</p>
+        <p>YouTube Videó Keresés Alkalmazás | Node.js + Express</p>
     </footer>
 
     <script src="app.js"></script>

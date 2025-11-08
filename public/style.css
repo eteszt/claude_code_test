@@ -46,7 +46,8 @@ header p {
     gap: 10px;
 }
 
-#urlInput {
+#urlInput,
+#searchInput {
     flex: 1;
     padding: 15px 20px;
     font-size: 1rem;
@@ -56,7 +57,8 @@ header p {
     transition: border-color 0.3s;
 }
 
-#urlInput:focus {
+#urlInput:focus,
+#searchInput:focus {
     border-color: #667eea;
 }
 
@@ -278,6 +280,99 @@ footer {
     opacity: 0.8;
 }
 
+/* Keresési eredmények */
+.search-results {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    animation: fadeIn 0.5s;
+}
+
+.search-results h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.video-list {
+    display: grid;
+    gap: 20px;
+}
+
+.video-card {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.video-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.video-card-thumbnail {
+    width: 200px;
+    height: 112px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.video-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.video-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.video-card-author {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.video-card-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.video-card-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Vissza gomb */
+.back-btn {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+}
+
+.back-btn:hover {
+    background: #e9ecef;
+}
+
 @media (max-width: 768px) {
     .video-header {
         flex-direction: column;
@@ -302,5 +397,14 @@ footer {
 
     #searchBtn {
         width: 100%;
+    }
+
+    .video-card {
+        flex-direction: column;
+    }
+
+    .video-card-thumbnail {
+        width: 100%;
+        height: auto;
     }
 }

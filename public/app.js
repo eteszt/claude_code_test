@@ -1,27 +1,34 @@
-const form = document.getElementById('videoForm');
-const urlInput = document.getElementById('urlInput');
+const searchForm = document.getElementById('searchForm');
+const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const errorDiv = document.getElementById('error');
-const resultsDiv = document.getElementById('results');
+const searchResultsDiv = document.getElementById('searchResults');
+const videoListDiv = document.getElementById('videoList');
+const resultCountSpan = document.getElementById('resultCount');
+const videoDetailsDiv = document.getElementById('videoDetails');
+const backBtn = document.getElementById('backBtn');
 
-form.addEventListener('submit', async (e) => {
+let currentResults = [];
+
+// Keresés form submit
+searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const url = urlInput.value.trim();
-    if (!url) return;
+    const query = searchInput.value.trim();
+    if (!query) return;
 
-    // UI állapot beállítása - betöltés
     setLoading(true);
     hideError();
-    hideResults();
+    hideSearchResults();
+    hideVideoDetails();
 
     try {
-        const response = await fetch('/api/video-info', {
+        const response = await fetch('/api/search', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ url })
+            body: JSON.stringify({ query })
         });
 
         const data = await response.json();
@@ -30,14 +37,20 @@ form.addEventListener('submit', async (e) => {
             throw new Error(data.error || 'Hiba történt');
         }
 
-        // Sikeres válasz - adatok megjelenítése
-        displayResults(data);
+        currentResults = data.results;
+        displaySearchResults(data.results);
 
     } catch (error) {
         showError(error.message);
     } finally {
         setLoading(false);
     }
+});
+
+// Vissza gomb
+backBtn.addEventListener('click', () => {
+    hideVideoDetails();
+    showSearchResults();
 });
 
 function setLoading(loading) {
@@ -64,11 +77,88 @@ function hideError() {
     errorDiv.style.display = 'none';
 }
 
-function hideResults() {
-    resultsDiv.style.display = 'none';
+function hideSearchResults() {
+    searchResultsDiv.style.display = 'none';
 }
 
-function displayResults(data) {
+function showSearchResults() {
+    searchResultsDiv.style.display = 'block';
+}
+
+function hideVideoDetails() {
+    videoDetailsDiv.style.display = 'none';
+}
+
+function displaySearchResults(results) {
+    if (results.length === 0) {
+        showError('Nem találhatók eredmények');
+        return;
+    }
+
+    // Eredmények számának beállítása
+    resultCountSpan.textContent = results.length;
+
+    // Lista kiürítése
+    videoListDiv.innerHTML = '';
+
+    // Videó kártyák létrehozása
+    results.forEach((video, index) => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.onclick = () => showVideoDetails(video.url);
+
+        card.innerHTML = `
+            <img src="${video.thumbnail}" alt="${video.title}" class="video-card-thumbnail">
+            <div class="video-card-info">
+                <div>
+                    <div class="video-card-title">${video.title}</div>
+                    <div class="video-card-author">📺 ${video.author}</div>
+                </div>
+                <div class="video-card-meta">
+                    <span>⏱️ ${video.duration}</span>
+                    <span>👁️ ${formatViewCount(video.viewCount)}</span>
+                    <span>📅 ${video.uploadedAt}</span>
+                </div>
+            </div>
+        `;
+
+        videoListDiv.appendChild(card);
+    });
+
+    showSearchResults();
+    searchResultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function showVideoDetails(url) {
+    hideSearchResults();
+    setLoading(true);
+
+    try {
+        const response = await fetch('/api/video-info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Hiba történt');
+        }
+
+        displayVideoDetails(data);
+
+    } catch (error) {
+        showError(error.message);
+        showSearchResults();
+    } finally {
+        setLoading(false);
+    }
+}
+
+function displayVideoDetails(data) {
     // Thumbnail
     document.getElementById('thumbnail').src = data.thumbnail;
     document.getElementById('thumbnail').alt = data.title;
@@ -116,16 +206,23 @@ function displayResults(data) {
     // Link
     document.getElementById('videoLink').href = data.url;
 
-    // Eredmények megjelenítése
-    resultsDiv.style.display = 'block';
+    // Részletek megjelenítése
+    videoDetailsDiv.style.display = 'block';
+    videoDetailsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-    // Scroll az eredményekhez
-    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function formatViewCount(count) {
+    if (count >= 1000000) {
+        return (count / 1000000).toFixed(1) + 'M';
+    } else if (count >= 1000) {
+        return (count / 1000).toFixed(1) + 'K';
+    }
+    return count.toLocaleString('hu-HU');
 }
 
 // URL beillesztéskor automatikusan kitöltés
-urlInput.addEventListener('paste', () => {
+searchInput.addEventListener('paste', () => {
     setTimeout(() => {
-        urlInput.value = urlInput.value.trim();
+        searchInput.value = searchInput.value.trim();
     }, 10);
 });

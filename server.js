@@ -1,5 +1,6 @@
 import express from 'express';
 import ytdl from '@distube/ytdl-core';
+import YouTube from 'youtube-sr';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -12,6 +13,53 @@ const PORT = process.env.PORT || 3000;
 // Statikus fájlok kiszolgálása
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+
+// API endpoint a YouTube kereséshez
+app.post('/api/search', async (req, res) => {
+  try {
+    const { query } = req.body;
+
+    if (!query) {
+      return res.status(400).json({ error: 'Keresési kifejezés megadása kötelező' });
+    }
+
+    console.log(`Keresés: "${query}"`);
+
+    // Keresés YouTube-on (10 legújabb találat)
+    const results = await YouTube.search(query, {
+      limit: 10,
+      type: 'video',
+      safeSearch: false
+    });
+
+    // Eredmények formázása
+    const videos = results.map(video => ({
+      videoId: video.id,
+      title: video.title,
+      author: video.channel?.name || 'N/A',
+      channelId: video.channel?.id || '',
+      duration: video.durationFormatted || 'N/A',
+      viewCount: video.views || 0,
+      uploadedAt: video.uploadedAt || 'N/A',
+      thumbnail: video.thumbnail?.url || '',
+      url: video.url
+    }));
+
+    console.log(`${videos.length} találat`);
+
+    res.json({ results: videos });
+
+  } catch (error) {
+    console.error('Hiba keresés közben:', error.message);
+    console.error('Stack:', error.stack);
+
+    const isDev = process.env.NODE_ENV !== 'production';
+    res.status(500).json({
+      error: 'Hiba történt a keresés során',
+      details: isDev ? error.message : undefined
+    });
+  }
+});
 
 // API endpoint a videó információk lekéréséhez
 app.post('/api/video-info', async (req, res) => {
