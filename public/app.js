@@ -131,31 +131,66 @@ function displaySearchResults(results) {
 
 async function showVideoDetails(url) {
     hideSearchResults();
-    setLoading(true);
 
-    try {
-        const response = await fetch('/api/video-info', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ url })
-        });
+    // Megkeressük a videót az eredmények között
+    const video = currentResults.find(v => v.url === url);
 
-        const data = await response.json();
+    if (video) {
+        // Ha megvan a keresési eredményekben, használjuk azt
+        displayVideoDetailsFromSearch(video);
+    } else {
+        // Ha nincs (nem kellene előfordulnia), próbáljuk lekérni az API-ból
+        setLoading(true);
+        try {
+            const response = await fetch('/api/video-info', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url })
+            });
 
-        if (!response.ok) {
-            throw new Error(data.error || 'Hiba történt');
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Hiba történt');
+            }
+
+            displayVideoDetails(data);
+
+        } catch (error) {
+            showError(error.message);
+            showSearchResults();
+        } finally {
+            setLoading(false);
         }
-
-        displayVideoDetails(data);
-
-    } catch (error) {
-        showError(error.message);
-        showSearchResults();
-    } finally {
-        setLoading(false);
     }
+}
+
+function displayVideoDetailsFromSearch(video) {
+    // A keresési eredményből kapott videó részletek használata
+    document.getElementById('thumbnail').src = video.thumbnail;
+    document.getElementById('thumbnail').alt = video.title;
+
+    document.getElementById('title').textContent = video.title;
+    document.getElementById('author').textContent = `📺 ${video.author}`;
+
+    document.getElementById('views').textContent = formatViewCount(video.viewCount);
+    document.getElementById('likes').textContent = 'N/A'; // Keresésből nem jön
+    document.getElementById('duration').textContent = video.duration;
+    document.getElementById('uploadDate').textContent = video.uploadedAt;
+
+    document.getElementById('description').textContent = 'Nincs elérhető részletes leírás';
+
+    document.getElementById('videoId').textContent = video.videoId;
+    document.getElementById('category').textContent = 'N/A';
+    document.getElementById('channel').textContent = video.author;
+
+    document.getElementById('keywordsSection').style.display = 'none';
+    document.getElementById('videoLink').href = video.url;
+
+    videoDetailsDiv.style.display = 'block';
+    videoDetailsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function displayVideoDetails(data) {
@@ -176,9 +211,9 @@ function displayVideoDetails(data) {
     document.getElementById('uploadDate').textContent = data.uploadDate;
 
     // Leírás
-    const description = data.description.length > 500
+    const description = data.description && data.description.length > 500
         ? data.description.substring(0, 500) + '...'
-        : data.description;
+        : (data.description || 'Nincs elérhető leírás');
     document.getElementById('description').textContent = description;
 
     // További információk
