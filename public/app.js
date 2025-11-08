@@ -109,12 +109,19 @@ function displaySearchResults(results) {
         card.className = 'video-card';
         card.onclick = () => window.open(video.url, '_blank');
 
+        // Leírás formázása (max 300 karakter)
+        let description = video.description || 'Nincs leírás';
+        if (description.length > 300) {
+            description = description.substring(0, 300) + '...';
+        }
+
         card.innerHTML = `
             <img src="${video.thumbnail}" alt="${video.title}" class="video-card-thumbnail">
             <div class="video-card-info">
                 <div>
                     <div class="video-card-title">${video.title}</div>
                     <div class="video-card-author">📺 ${video.author}</div>
+                    <div class="video-card-description">${description}</div>
                 </div>
                 <div class="video-card-meta">
                     <span>⏱️ ${video.duration}</span>

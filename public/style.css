@@ -364,6 +364,15 @@ footer {
     margin-bottom: 8px;
 }
 
+.video-card-description {
+    color: #777;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #e0e0e0;
+}
+
 .video-card-meta {
     display: flex;
     gap: 15px;

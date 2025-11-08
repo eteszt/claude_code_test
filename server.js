@@ -82,12 +82,42 @@ app.post('/api/search', async (req, res) => {
     }
 
     // Első 10 videó kiválasztása
-    const top10Videos = videos.slice(0, 10).map(v => {
-      const { _daysAgo, ...video } = v; // _daysAgo mező eltávolítása
-      return video;
+    const top10 = videos.slice(0, 10);
+
+    // Részletes videó információk lekérése párhuzamosan (leírásokkal együtt)
+    console.log('Részletes leírások lekérése a top 10 videóhoz...');
+
+    const detailedVideos = await Promise.allSettled(
+      top10.map(async (video) => {
+        try {
+          const fullVideo = await YouTube.getVideo(video.url);
+
+          return {
+            ...video,
+            description: fullVideo?.description || ''
+          };
+        } catch (err) {
+          console.log(`Nem sikerült lekérni leírást: ${video.title?.substring(0, 40)}... - ${err.message}`);
+          return { ...video, description: '' };
+        }
+      })
+    );
+
+    // Csak a sikeresen lekért videókat tartjuk meg
+    const top10Videos = detailedVideos.map((result, index) => {
+      if (result.status === 'fulfilled') {
+        const { _daysAgo, ...video } = result.value;
+        return video;
+      } else {
+        // Ha hibázott, az eredeti adatokat használjuk leírás nélkül
+        const { _daysAgo, ...video } = top10[index];
+        return { ...video, description: '' };
+      }
     });
 
     console.log(`${top10Videos.length} találat`);
+    const firstDesc = top10Videos[0]?.description;
+    console.log('Első videó leírása:', firstDesc ? firstDesc.substring(0, 100) + '...' : 'NINCS');
 
     res.json({ results: top10Videos });
 
