@@ -72,48 +72,42 @@ app.post('/api/video-info', async (req, res) => {
       return res.status(400).json({ error: 'URL megadása kötelező' });
     }
 
-    // Ellenőrizzük, hogy érvényes YouTube URL-e
-    if (!ytdl.validateURL(url)) {
-      return res.status(400).json({ error: 'Érvénytelen YouTube URL' });
-    }
+    console.log(`Videó lekérése: ${url}`);
 
-    // Videó információk lekérése
-    const info = await ytdl.getInfo(url);
-    const videoDetails = info.videoDetails;
+    // Videó információk lekérése youtube-sr-rel
+    const video = await YouTube.getVideo(url);
+
+    if (!video) {
+      return res.status(404).json({ error: 'A videó nem található' });
+    }
 
     // Válasz összeállítása
     const response = {
-      title: videoDetails.title,
-      author: videoDetails.author.name,
-      channelName: videoDetails.ownerChannelName,
-      videoId: videoDetails.videoId,
-      duration: formatDuration(videoDetails.lengthSeconds),
-      viewCount: Number(videoDetails.viewCount),
-      uploadDate: videoDetails.uploadDate || 'N/A',
-      category: videoDetails.category || 'N/A',
-      likes: videoDetails.likes ? Number(videoDetails.likes) : null,
-      description: videoDetails.description,
-      keywords: videoDetails.keywords || [],
-      url: videoDetails.video_url,
-      thumbnail: videoDetails.thumbnails[videoDetails.thumbnails.length - 1].url,
-      thumbnails: videoDetails.thumbnails
+      title: video.title || 'N/A',
+      author: video.channel?.name || 'N/A',
+      channelName: video.channel?.name || 'N/A',
+      videoId: video.id || 'N/A',
+      duration: video.durationFormatted || 'N/A',
+      viewCount: video.views || 0,
+      uploadDate: video.uploadedAt || 'N/A',
+      category: 'N/A', // youtube-sr nem ad vissza kategóriát
+      likes: video.likes || null,
+      description: video.description || '',
+      keywords: video.tags || [],
+      url: video.url || url,
+      thumbnail: video.thumbnail?.url || '',
+      thumbnails: video.thumbnails || []
     };
 
+    console.log(`Videó részletek sikeresen lekérve: ${video.title}`);
     res.json(response);
 
   } catch (error) {
     console.error('Hiba videó információk lekérésekor:', error.message);
     console.error('Stack:', error.stack);
 
-    if (error.message.includes('Video unavailable')) {
+    if (error.message.includes('Video unavailable') || error.message.includes('not found')) {
       return res.status(404).json({ error: 'A videó nem elérhető vagy privát' });
-    }
-
-    if (error.message.includes('Could not extract')) {
-      return res.status(503).json({
-        error: 'YouTube API hiba - Próbáld újra később',
-        details: 'A YouTube API átmenetileg nem elérhető vagy változott'
-      });
     }
 
     // Részletesebb hibaüzenet development módban
