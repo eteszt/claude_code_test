@@ -393,6 +393,113 @@ footer {
     background: #e9ecef;
 }
 
+/* Keresési tippek panel */
+.search-tips {
+    margin-top: 20px;
+    border-top: 2px solid #e0e0e0;
+    padding-top: 15px;
+}
+
+.tips-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: background 0.3s;
+    user-select: none;
+}
+
+.tips-header:hover {
+    background: #e9ecef;
+}
+
+.tips-header span {
+    font-weight: 600;
+    color: #333;
+}
+
+.toggle-icon {
+    transition: transform 0.3s;
+    font-size: 0.8rem;
+}
+
+.toggle-icon.open {
+    transform: rotate(-180deg);
+}
+
+.tips-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.tips-content.open {
+    max-height: 600px;
+    padding-top: 15px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.tip-category h4 {
+    color: #667eea;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.tip-category ul {
+    list-style: none;
+    padding: 0;
+}
+
+.tip-category ul li {
+    padding: 5px 0;
+    color: #555;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.tip-category ul li:before {
+    content: "→ ";
+    color: #667eea;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.quick-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.quick-search {
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: left;
+}
+
+.quick-search:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.quick-search:active {
+    transform: translateY(0);
+}
+
 @media (max-width: 768px) {
     .video-header {
         flex-direction: column;
@@ -430,5 +537,13 @@ footer {
     .video-card-thumbnail {
         width: 100%;
         height: auto;
+    }
+
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-links {
+        grid-template-columns: 1fr;
     }
 }

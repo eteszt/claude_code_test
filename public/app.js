@@ -263,3 +263,23 @@ searchInput.addEventListener('paste', () => {
         searchInput.value = searchInput.value.trim();
     }, 10);
 });
+
+// Keresési tippek toggle
+const tipsToggle = document.getElementById('tipsToggle');
+const tipsContent = document.getElementById('tipsContent');
+const toggleIcon = document.querySelector('.toggle-icon');
+
+tipsToggle.addEventListener('click', () => {
+    tipsContent.classList.toggle('open');
+    toggleIcon.classList.toggle('open');
+});
+
+// Gyors keresési gombok
+document.querySelectorAll('.quick-search').forEach(button => {
+    button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const query = button.getAttribute('data-query');
+        searchInput.value = query;
+        searchForm.dispatchEvent(new Event('submit'));
+    });
+});
