@@ -1,8 +1,10 @@
 import express from 'express';
 import ytdl from '@distube/ytdl-core';
-import YouTube from 'youtube-sr';
+import ytsPackage from 'youtube-sr';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+const YouTube = ytsPackage.default || ytsPackage;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
