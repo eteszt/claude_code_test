@@ -3,6 +3,7 @@ import ytdl from '@distube/ytdl-core';
 import ytsPackage from 'youtube-sr';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import translate from '@iamtraction/google-translate';
 
 const YouTube = ytsPackage.default || ytsPackage;
 
@@ -100,13 +101,26 @@ app.post('/api/search', async (req, res) => {
         }
 
         const fullVideo = await YouTube.getVideo(video.url);
+        let description = fullVideo?.description || '';
+
+        // Magyar fordítás (fallback: eredeti szöveg ha nem sikerül)
+        if (description) {
+          try {
+            const result = await translate(description, { to: 'hu' });
+            description = result.text;
+            console.log(`✓ ${i + 1}/10 - Leírás lefordítva: ${video.title?.substring(0, 40)}...`);
+          } catch (translateErr) {
+            console.log(`  ⚠ Fordítás sikertelen, eredeti marad: ${translateErr.message}`);
+            console.log(`✓ ${i + 1}/10 - Leírás (eredeti): ${video.title?.substring(0, 40)}...`);
+          }
+        } else {
+          console.log(`✓ ${i + 1}/10 - Leírás (üres): ${video.title?.substring(0, 40)}...`);
+        }
 
         top10Videos.push({
           ...videoData,
-          description: fullVideo?.description || ''
+          description: description
         });
-
-        console.log(`✓ ${i + 1}/10 - Leírás OK: ${video.title?.substring(0, 40)}...`);
       } catch (err) {
         console.log(`✗ ${i + 1}/10 - Nem sikerült: ${video.title?.substring(0, 40)}... - ${err.message}`);
         top10Videos.push({
